@@ -18,6 +18,7 @@ deployment (hosting, real payment integration, rate limiting, Postgres
 instead of SQLite — see [What a real production SaaS would
 add](<img width="1507" height="970" alt="image" src="https://github.com/user-attachments/assets/b8a497fe-0406-4a6b-b0be-0ddd8466eefa" />
 )) is actively being worked on.
+<img width="1507" height="970" alt="image" src="https://github.com/user-attachments/assets/70e194c3-8f78-41fe-8dbd-a91d133cdacb" />
 
 **Contributions are welcome.** If you want to help with any of the items
 in that list, or find a bug, feel free to open an issue or a pull request.
