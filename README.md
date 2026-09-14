@@ -16,7 +16,8 @@ this repo runs and is tested locally (see [Testing](#testing)), but it
 hasn't been hardened or deployed for real traffic yet. Production
 deployment (hosting, real payment integration, rate limiting, Postgres
 instead of SQLite — see [What a real production SaaS would
-add](#what-a-real-production-saas-would-add)) is actively being worked on.
+add](<img width="1507" height="970" alt="image" src="https://github.com/user-attachments/assets/b8a497fe-0406-4a6b-b0be-0ddd8466eefa" />
+)) is actively being worked on.
 
 **Contributions are welcome.** If you want to help with any of the items
 in that list, or find a bug, feel free to open an issue or a pull request.
@@ -24,7 +25,9 @@ in that list, or find a bug, feel free to open an issue or a pull request.
 ## Screenshots
 
 **Sign up → train → classify → usage, all in one page:**
-![Dashboard — signup and training](docs/screenshots/dashboard-full.png)
+![Dashboard — signup and training]<img width="1575" height="1049" alt="image" src="https://github.com/user-attachments/assets/0f5b5a50-d7ca-40fe-b8a2-d572d60d73ae" />
+
+
 
 **Live classification result and usage/cost tracking:**
 ![Dashboard — classify result and billing](docs/screenshots/dashboard-train-classify.png)
