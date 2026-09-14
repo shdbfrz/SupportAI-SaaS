@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SupportAI — SaaS console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0D0D0F; --panel: #17171A; --panel-line: #26262A;
+    --amber: #E8A33D; --amber-dim: #6b5228;
+    --blue: #5B8FE8; --blue-dim: #2c3f6b;
+    --text: #E7E5E0; --text-dim: #8B8A85;
+    --green: #6B9E78; --red: #C25B4A;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg);
+    background-image: linear-gradient(var(--panel-line) 1px, transparent 1px), linear-gradient(90deg, var(--panel-line) 1px, transparent 1px);
+    background-size: 32px 32px; background-position: -1px -1px;
+    color: var(--text); font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh; padding: 28px 20px 60px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  header { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--panel-line); padding-bottom: 16px; margin-bottom: 22px; flex-wrap: wrap; gap: 10px; }
+  h1 { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin: 0; }
+  h1 span { color: var(--amber); }
+  .sub { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+  .panel { background: var(--panel); border: 1px solid var(--panel-line); border-radius: 3px; padding: 20px; margin-bottom: 16px; }
+  .panel-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-dim); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--amber-dim); color: var(--amber); font-size: 10px; margin-right: 8px; }
+
+  input[type=text], textarea {
+    width: 100%; background: #0D0D0F; border: 1px solid var(--panel-line); color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; border-radius: 3px; padding: 12px;
+  }
+  textarea { resize: vertical; min-height: 60px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  input:focus, textarea:focus { outline: none; border-color: var(--amber-dim); }
+
+  .row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+  button {
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; background: transparent; color: var(--text);
+    border: 1px solid var(--panel-line); border-radius: 3px; padding: 10px 18px; cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  button:hover { border-color: var(--amber); color: var(--amber); }
+  button:disabled { opacity: 0.4; cursor: default; }
+  button.primary { border-color: var(--amber-dim); color: var(--amber); }
+
+  .tab-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .tab { font-family: 'IBM Plex Mono', monospace; font-size: 12px; padding: 6px 14px; border-radius: 3px; border: 1px solid var(--panel-line); color: var(--text-dim); cursor: pointer; }
+  .tab.active { border-color: var(--amber); color: var(--amber); }
+
+  .api-key-box {
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; background: #0D0D0F;
+    border: 1px solid var(--amber-dim); border-radius: 3px; padding: 12px; color: var(--amber);
+    word-break: break-all; margin-top: 10px;
+  }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--panel-line); border: 1px solid var(--panel-line); border-radius: 3px; overflow: hidden; margin-bottom: 16px; }
+  .stat { background: var(--panel); padding: 18px 16px; }
+  .stat-value { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500; color: var(--amber); line-height: 1.1; }
+  .stat-value.green { color: var(--green); }
+  .stat-label { font-size: 11px; color: var(--text-dim); margin-top: 6px; }
+
+  .route-badge {
+    display: inline-flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px; padding: 8px 14px; border-radius: 3px; margin-bottom: 10px;
+  }
+  .route-badge.fast { background: rgba(232,163,61,0.12); color: var(--amber); border: 1px solid var(--amber-dim); }
+  .route-badge.llm { background: rgba(91,143,232,0.12); color: var(--blue); border: 1px solid var(--blue-dim); }
+
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+  .detail-row { color: var(--text-dim); }
+  .detail-row b { color: var(--text); font-weight: 500; }
+
+  .empty-note { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-dim); }
+  .hint { font-size: 11px; color: var(--text-dim); margin-top: 8px; line-height: 1.6; }
+  .locked { opacity: 0.4; pointer-events: none; }
+  footer { text-align: center; font-size: 12px; color: var(--text-dim); margin-top: 24px; }
+  footer a { color: var(--text-dim); }
+
+  @media (max-width: 620px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Support<span>AI</span></h1>
+      <div class="sub">multi-tenant intent-classification gateway — SaaS console</div>
+    </div>
+  </header>
+
+  <!-- STEP 1: SIGNUP -->
+  <div class="panel" id="signup-panel">
+    <div class="panel-label"><span><span class="step-num">1</span>SIGN UP</span></div>
+    <input type="text" id="company-name" placeholder="Your company name">
+    <div class="row">
+      <button class="primary" id="signup-btn">create account</button>
+    </div>
+    <div id="api-key-display"></div>
+  </div>
+
+  <!-- STEP 2: TRAIN -->
+  <div class="panel locked" id="train-panel">
+    <div class="panel-label"><span><span class="step-num">2</span>TRAIN YOUR MODEL</span></div>
+    <div class="tab-row">
+      <div class="tab active" id="tab-demo">try with demo data</div>
+      <div class="tab" id="tab-custom">upload your own data</div>
+    </div>
+    <div id="demo-tab-content">
+      <div class="empty-note">Trains instantly on a bundled 8-intent customer-support dataset — good for trying the product before connecting your own tickets.</div>
+    </div>
+    <div id="custom-tab-content" style="display:none;">
+      <textarea id="custom-data" rows="6" placeholder='{"texts": ["order a pizza", "where is my order"], "labels": ["order", "delivery"]}'></textarea>
+      <div class="hint">Paste JSON with matching "texts" and "labels" arrays. Needs at least 2 distinct labels.</div>
+    </div>
+    <div class="row">
+      <button class="primary" id="train-btn">train model</button>
+    </div>
+    <div id="train-result"></div>
+  </div>
+
+  <!-- STEP 3: CLASSIFY -->
+  <div class="panel locked" id="classify-panel">
+    <div class="panel-label"><span><span class="step-num">3</span>TEST IT LIVE</span></div>
+    <textarea id="query-input" rows="2" placeholder="type a customer query...">why was I charged twice this month</textarea>
+    <div class="row">
+      <button id="classify-btn">classify</button>
+    </div>
+    <div id="classify-result" style="margin-top:14px;"></div>
+  </div>
+
+  <!-- STEP 4: USAGE / BILLING -->
+  <div class="panel locked" id="usage-panel">
+    <div class="panel-label"><span><span class="step-num">4</span>USAGE & ESTIMATED COST</span></div>
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-value" id="u-total">0</div><div class="stat-label">total classifications</div></div>
+      <div class="stat"><div class="stat-value" id="u-bypass-rate">—</div><div class="stat-label">llm bypass rate</div></div>
+      <div class="stat"><div class="stat-value" id="u-cost">$0</div><div class="stat-label">estimated cost</div></div>
+      <div class="stat"><div class="stat-value green" id="u-saved">$0</div><div class="stat-label">saved vs all-LLM baseline</div></div>
+    </div>
+    <div class="hint">Illustrative pricing: $0.00005/fast-path classification vs. $0.002/LLM call — mirrors typical usage-based LLM API pricing, used here to show the ROI story, not a real invoice.</div>
+  </div>
+
+  <footer>API docs at <a href="/docs">/docs</a> · each company's model, data, and usage are fully isolated</footer>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let apiKey = localStorage.getItem('supportai_api_key');
+let companyName = localStorage.getItem('supportai_company_name');
+
+function unlock(panelId) {
+  $(panelId).classList.remove('locked');
+}
+
+function showApiKey(key, name) {
+  $('api-key-display').innerHTML = `
+    <div class="api-key-box">${key}</div>
+    <div class="hint">Signed in as <b style="color:var(--text)">${name}</b>. This key is saved in your browser — use it as the <code>X-API-Key</code> header for /train and /classify.</div>
+  `;
+  $('company-name').value = name;
+  unlock('train-panel');
+  unlock('classify-panel');
+  unlock('usage-panel');
+  refreshUsage();
+}
+
+async function signup() {
+  const name = $('company-name').value.trim();
+  if (!name) return;
+  const r = await fetch('/signup', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ company_name: name })
+  });
+  const data = await r.json();
+  apiKey = data.api_key;
+  companyName = data.company_name;
+  localStorage.setItem('supportai_api_key', apiKey);
+  localStorage.setItem('supportai_company_name', companyName);
+  showApiKey(apiKey, companyName);
+}
+
+$('tab-demo').addEventListener('click', () => {
+  $('tab-demo').classList.add('active'); $('tab-custom').classList.remove('active');
+  $('demo-tab-content').style.display = 'block'; $('custom-tab-content').style.display = 'none';
+});
+$('tab-custom').addEventListener('click', () => {
+  $('tab-custom').classList.add('active'); $('tab-demo').classList.remove('active');
+  $('custom-tab-content').style.display = 'block'; $('demo-tab-content').style.display = 'none';
+});
+
+async function train() {
+  if (!apiKey) return;
+  const btn = $('train-btn');
+  btn.disabled = true; btn.textContent = 'training...';
+
+  const usingCustom = $('tab-custom').classList.contains('active');
+  let body;
+  if (usingCustom) {
+    try {
+      const parsed = JSON.parse($('custom-data').value);
+      body = { texts: parsed.texts, labels: parsed.labels, use_demo_data: false };
+    } catch (e) {
+      $('train-result').innerHTML = `<div class="hint" style="color:var(--red)">Invalid JSON: ${e.message}</div>`;
+      btn.disabled = false; btn.textContent = 'train model';
+      return;
+    }
+  } else {
+    body = { use_demo_data: true };
+  }
+
+  const r = await fetch('/train', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
+    body: JSON.stringify(body)
+  });
+  const data = await r.json();
+
+  if (!r.ok) {
+    $('train-result').innerHTML = `<div class="hint" style="color:var(--red)">${data.detail}</div>`;
+  } else {
+    $('train-result').innerHTML = `
+      <div class="detail-grid" style="margin-top:14px;">
+        <div class="detail-row">intents learned: <b>${data.n_intents}</b></div>
+        <div class="detail-row">training examples: <b>${data.n_train}</b></div>
+        <div class="detail-row">accuracy: <b>${(data.test_accuracy * 100).toFixed(1)}%</b> <span style="color:var(--text-dim)">(${data.accuracy_measured_on === 'held_out_test_set' ? 'held-out set' : 'train set — small dataset'})</span></div>
+        <div class="detail-row">model size reduction: <b>${data.size_reduction_pct}%</b> (INT8)</div>
+        <div class="detail-row">train time: <b>${data.train_time_s}s</b></div>
+        <div class="detail-row">model size: <b>${data.onnx_int8_size_kb} KB</b></div>
+      </div>
+    `;
+  }
+  btn.disabled = false; btn.textContent = 'train model';
+}
+
+async function classify() {
+  if (!apiKey) return;
+  const text = $('query-input').value.trim();
+  if (!text) return;
+  const btn = $('classify-btn');
+  btn.disabled = true; btn.textContent = 'classifying...';
+
+  const r = await fetch('/classify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
+    body: JSON.stringify({ text })
+  });
+  const data = await r.json();
+  const resultDiv = $('classify-result');
+
+  if (!r.ok) {
+    resultDiv.innerHTML = `<div class="hint" style="color:var(--red)">${data.detail}</div>`;
+  } else if (data.route === 'fast_classifier') {
+    resultDiv.innerHTML = `
+      <div class="route-badge fast">⚡ FAST PATH — LLM bypassed (${data.latency_ms}ms)</div>
+      <div class="detail-grid">
+        <div class="detail-row">intent: <b>${data.intent}</b></div>
+        <div class="detail-row">confidence: <b>${(data.confidence * 100).toFixed(1)}%</b></div>
+      </div>
+    `;
+  } else {
+    resultDiv.innerHTML = `
+      <div class="route-badge llm">🔀 ROUTED TO LLM — low confidence (${data.latency_ms}ms)</div>
+      <div class="detail-grid">
+        <div class="detail-row">classifier's guess: <b>${data.classifier_guess}</b></div>
+        <div class="detail-row">confidence: <b>${(data.classifier_confidence * 100).toFixed(1)}%</b></div>
+      </div>
+    `;
+  }
+  btn.disabled = false; btn.textContent = 'classify';
+  await refreshUsage();
+}
+
+async function refreshUsage() {
+  if (!apiKey) return;
+  const r = await fetch('/usage', { headers: { 'X-API-Key': apiKey } });
+  if (!r.ok) return;
+  const data = await r.json();
+  $('u-total').textContent = data.total_classifications;
+  $('u-bypass-rate').textContent = data.total_classifications ? `${data.bypass_rate_pct}%` : '—';
+  $('u-cost').textContent = `$${data.estimated_cost_usd.toFixed(5)}`;
+  $('u-saved').textContent = `$${data.estimated_savings_usd.toFixed(5)}`;
+}
+
+$('signup-btn').addEventListener('click', signup);
+$('train-btn').addEventListener('click', train);
+$('classify-btn').addEventListener('click', classify);
+
+// resume session if we already have a key saved in this browser
+if (apiKey && companyName) {
+  showApiKey(apiKey, companyName);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "used_demo_data": true,
+  "n_train": 416,
+  "n_test": 104,
+  "n_intents": 8,
+  "intents": [
+    "account_management",
+    "billing_issue",
+    "complaint",
+    "greeting",
+    "positive_feedback",
+    "product_inquiry",
+    "refund_request",
+    "technical_support"
+  ],
+  "test_accuracy": 0.9038,
+  "accuracy_measured_on": "held_out_test_set",
+  "train_time_s": 0.63,
+  "onnx_fp32_size_kb": 264.0,
+  "onnx_int8_size_kb": 85.8,
+  "size_reduction_pct": 67.5
+}
