@@ -6,7 +6,7 @@ instantly on bundled demo data), and get an API that bypasses expensive
 LLM calls for queries it's confident about — with per-tenant usage
 tracking and cost-savings estimates, like a real usage-based API product. 
 
-Built with FastAPI, scikit-learn, ONNX Runtime (INT8 quantized), FAISS,
+Built with FastAPI, scikit-learn, ONNX Runtime (INT8 quantized), FAISS, 
 SQLite, and a live signup/train/classify/billing dashboard.
 
 ## Project status
