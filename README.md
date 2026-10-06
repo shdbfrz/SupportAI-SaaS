@@ -2,7 +2,7 @@
 
 A self-serve SaaS version of the SupportAI routing gateway: any company can
 sign up, train a classifier on their own support queries (or try it
-instantly on bundled demo data), and get an API that bypasses expensive
+instantly on bundled demo data), and get an API that bypasses expensive 
 LLM calls for queries it's confident about — with per-tenant usage
 tracking and cost-savings estimates, like a real usage-based API product. 
 
