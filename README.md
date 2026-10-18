@@ -8,7 +8,7 @@ tracking and cost-savings estimates, like a real usage-based API product.
 
 Built with FastAPI, scikit-learn, ONNX Runtime (INT8 quantized), FAISS, 
 SQLite, and a live signup/train/classify/billing dashboard.
- 
+  
 ## Project status
 
 🚧 **Work in progress — not yet deployed to production.** Everything in
