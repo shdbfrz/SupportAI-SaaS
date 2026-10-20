@@ -7,7 +7,7 @@ LLM calls for queries it's confident about — with per-tenant usage
 tracking and cost-savings estimates, like a real usage-based API product. 
 
 Built with FastAPI, scikit-learn, ONNX Runtime (INT8 quantized), FAISS, 
-SQLite, and a live signup/train/classify/billing dashboard.
+SQLite, and a live signup/train/classify/billing dashboard.  
   
 ## Project status
 
